@@ -1,16 +1,24 @@
-# Liquid Glass Music Site
+# Музыкальные упражнения Кирюшина
 
-A modern, responsive portfolio website for Navi Naveen, featuring a beautiful liquid glass navbar effect, dark/light mode, and smooth animations.
+Этот проект представляет собой интерактивный веб-сайт для прослушивания и изучения музыкальных упражнений В.В. Кирюшина. Он позволяет пользователям находить упражнения по номеру и воспроизводить соответствующие аудиофайлы.
 
-## 🌟 Features
+## Особенности
 
-- **Liquid Glass Navbar**: Unique wavy design with glassmorphism and neon glowing borders
-- **Dark/Light Mode**: Toggle between color schemes with smooth transitions
-- **Responsive Design**: Works seamlessly on mobile, tablet, and desktop
-- **Animated UI**: Smooth transitions and scroll animations using Framer Motion
-- **Project Showcase**: Interactive project cards with detailed modal views
-- **Timeline Layout**: Visual representation of academic journey
-- **Contact Form**: Glassmorphic contact form with social links
+- **Поиск по номеру упражнения**: Быстро находите нужное упражнение.
+- **Интерактивные карточки упражнений**: Каждое упражнение отображается в виде карточки с номером, описанием, нотацией и плеером.
+- **Встроенный аудиоплеер**: Воспроизведение и регулировка громкости аудиофайлов упражнений.
+- **Информация о методике**: Раздел "About" содержит биографические сведения и описание эмоционально-образной методики музыкального воспитания В.В. Кирюшина.
+- **Современный и отзывчивый дизайн**: Адаптируется под мобильные устройства и настольные компьютеры.
+- **Эффект Liquid Glass**: Уникальный визуальный стиль навигационной панели.
+- **Плавные анимации**: Используется Framer Motion для плавных переходов и анимаций.
+
+## Технологии
+
+- **React.js**: Библиотека для создания пользовательского интерфейса.
+- **Tailwind CSS**: Фреймворк для стилизации.
+- **Framer Motion**: Библиотека для анимаций.
+- **React Icons**: Коллекция иконок.
+- **React Router DOM**: Для навигации между страницами (Home, About).
 
 ## 🚀 Technologies Used
 
@@ -23,25 +31,21 @@ A modern, responsive portfolio website for Navi Naveen, featuring a beautiful li
 
 ```
 /
-├── public/              # Static files
-│   ├── index.html       # HTML template
-│   ├── profile.svg      # Profile image
-│   └── manifest.json    # PWA manifest
+├── public/ # Статические файлы
+│ ├── index.html # HTML шаблон
+│ └── ...
 ├── src/
-│   ├── components/      # React components
-│   │   ├── Navbar.js    # Liquid glass navbar
-│   │   ├── Hero.js      # Hero section
-│   │   ├── About.js     # About section
-│   │   ├── Projects.js  # Projects section
-│   │   ├── Studies.js   # Studies timeline
-│   │   ├── Contact.js   # Contact form
-│   │   └── ScrollToTop.js # Scroll to top button
-│   ├── App.js           # Main app component
-│   ├── index.js         # Entry point
-│   └── index.css        # Global styles and Tailwind directives
-├── tailwind.config.js   # Tailwind configuration
-├── postcss.config.js    # PostCSS configuration
-└── package.json         # Dependencies and scripts
+│ ├── components/ # Компоненты React
+│ │ ├── Navbar.js # Навигационная панель
+│ │ ├── ExerciseSection.js # Секция с упражнениями
+│ │ ├── ExerciseCard.js # Карточка упражнения с плеером
+│ │ ├── About.js # Секция "О методике"
+│ │ └── ...
+│ ├── App.js # Главный компонент приложения
+│ ├── index.js # Точка входа
+│ └── index.css # Глобальные стили
+├── ...
+└── package.json # Зависимости и скрипты
 ```
 
 ## 🛠️ Setup and Installation
