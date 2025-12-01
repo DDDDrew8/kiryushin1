@@ -1,4 +1,4 @@
-# Navi Naveen Portfolio
+# Liquid Glass Music Site
 
 A modern, responsive portfolio website for Navi Naveen, featuring a beautiful liquid glass navbar effect, dark/light mode, and smooth animations.
 
