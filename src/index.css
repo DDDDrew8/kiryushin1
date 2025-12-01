@@ -63,15 +63,18 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+/* ... (остальные стили до .ios-glass оставляем без изменений) ... */
+
 /* iOS 26-like Liquid Glass Effect */
 .ios-glass {
-  background: rgba(255, 255, 255, 0.4);
+  /* Ультрафиолетовый/фиолетовый фон с прозрачностью */
+  background: rgba(128, 0, 128, 0.4); /* Цвет "Purple" с 40% непрозрачностью */
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: 
+  border: 1px solid rgba(255, 255, 255, 0.5); /* Светлая граница сохраняется */
+  box-shadow:
     0 4px 30px rgba(0, 0, 0, 0.1),
-    inset 0 0 20px rgba(255, 255, 255, 0.5);
+    inset 0 0 20px rgba(255, 255, 255, 0.5); /* Внутреннее свечение можно оставить */
   position: relative;
   overflow: hidden;
   z-index: 10;
@@ -79,7 +82,7 @@ body {
   max-width: 1200px;
 }
 
-/* Primary gradient overlay */
+/* Primary gradient overlay (основной градиентный слой) */
 .ios-glass::before {
   content: '';
   position: absolute;
@@ -87,17 +90,19 @@ body {
   left: -50%;
   width: 200%;
   height: 200%;
+  /* Ультрафиолетовый/фиолетовый градиент */
   background: radial-gradient(
     circle at center,
-    rgba(255, 255, 255, 0.3) 0%,
-    rgba(255, 255, 255, 0) 70%
+    rgba(138, 43, 226, 0.3) 0%, /* Цвет "Blue Violet" с прозрачностью */
+    rgba(75, 0, 130, 0.3) 50%,  /* Цвет "Indigo" с прозрачностью */
+    rgba(255, 255, 255, 0) 70%   /* Прозрачный */
   );
   transform: rotate(0deg);
   animation: rotate-gradient 15s linear infinite;
   z-index: -1;
 }
 
-/* Secondary moving highlight */
+/* Secondary moving highlight (вторичное свечение) */
 .ios-glass::after {
   content: '';
   position: absolute;
@@ -105,10 +110,11 @@ body {
   left: -100%;
   width: 200%;
   height: 100%;
+  /* Ультрафиолетовый/фиолетовый градиент для блика */
   background: linear-gradient(
     90deg,
     rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.2) 50%,
+    rgba(138, 43, 226, 0.2) 50%, /* Цвет "Blue Violet" с меньшей непрозрачностью */
     rgba(255, 255, 255, 0) 100%
   );
   transform: skewX(-20deg);
@@ -118,29 +124,36 @@ body {
 
 /* Dark mode styles */
 .dark .ios-glass {
-  background: rgba(15, 23, 42, 0.4);
+  /* Ультрафиолетовый/фиолетовый фон для тёмной темы */
+  background: rgba(75, 0, 130, 0.4); /* Цвет "Indigo" с 40% непрозрачностью */
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 
+  box-shadow:
     0 4px 30px rgba(0, 0, 0, 0.3),
     inset 0 0 20px rgba(255, 255, 255, 0.1);
 }
 
 .dark .ios-glass::before {
+  /* Градиент для тёмной темы */
   background: radial-gradient(
     circle at center,
-    rgba(255, 255, 255, 0.1) 0%,
+    rgba(147, 112, 219, 0.1) 0%, /* Цвет "Medium Purple" с прозрачностью */
+    rgba(75, 0, 130, 0.1) 50%,   /* Цвет "Indigo" с прозрачностью */
     rgba(255, 255, 255, 0) 70%
   );
 }
 
 .dark .ios-glass::after {
+  /* Блик для тёмной темы */
   background: linear-gradient(
     90deg,
     rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.05) 50%,
+    rgba(147, 112, 219, 0.05) 50%, /* Цвет "Medium Purple" с ещё меньшей непрозрачностью */
     rgba(255, 255, 255, 0) 100%
   );
 }
+
+/* ... (остальные стили после .ios-glass оставляем без изменений) ... */
+
 
 /* Animations */
 @keyframes rotate-gradient {
