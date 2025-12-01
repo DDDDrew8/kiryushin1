@@ -1,6 +1,6 @@
 {
   "buildCommand": "npm install && npm run build",
-  "outputDirectory": "dist",
+  "outputDirectory": "build", // Изменено с "dist" на "build"
   "routes": [
     {
       "handle": "filesystem"
