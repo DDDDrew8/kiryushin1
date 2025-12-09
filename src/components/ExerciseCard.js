@@ -1,13 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaPlay, FaPause, FaVolumeUp } from 'react-icons/fa';
+import { FaPlay, FaPause, FaStop, FaVolumeUp } from 'react-icons/fa'; // Добавлена иконка FaStop
 
 const ExerciseCard = ({ exercise }) => {
-  // Проверка на hidden больше не нужна, так как она происходит в App.js
+  // Проверка на hidden должна происходить в App.js при фильтрации.
+  // В этом компоненте мы предполагаем, что получили только видимые упражнения.
+  // if (exercise.hidden) { return null; } // <-- Эта строка вызывает ошибку ESLint
 
   const audioRef = useRef(null);
+  const progressRef = useRef(null); // Ref для прогресс-бара
   const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(1.0); // Громкость от 0 до 1
+  const [volume, setVolume] = useState(1.0);
+  const [currentTime, setCurrentTime] = useState(0); // Для отслеживания текущего времени
+  const [duration, setDuration] = useState(0); // Для отслеживания общей продолжительности
 
   // Обработка воспроизведения/паузы
   const togglePlayPause = () => {
@@ -27,12 +32,49 @@ const ExerciseCard = ({ exercise }) => {
     }
   };
 
+  // Обработка стоп
+  const handleStop = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0; // Перемотка в начало
+      setIsPlaying(false);
+    }
+  };
+
   // Обработка изменения громкости
   const handleVolumeChange = (e) => {
     const newVolume = parseFloat(e.target.value);
     setVolume(newVolume);
     if (audioRef.current) {
       audioRef.current.volume = newVolume;
+    }
+  };
+
+  // Обработка изменения времени воспроизведения (перемотка)
+  const handleProgressChange = (e) => {
+    if (audioRef.current && !isNaN(audioRef.current.duration)) {
+      const newTime = (e.target.value / 100) * audioRef.current.duration;
+      audioRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
+    }
+  };
+
+  // Обновление прогресс-бара при воспроизведении
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime);
+      if (progressRef.current) {
+        // Обновляем значение прогресс-бара в процентах
+        const percent = (audioRef.current.currentTime / audioRef.current.duration) * 100;
+        progressRef.current.value = percent || 0;
+      }
+    }
+  };
+
+  // Установка общей продолжительности при загрузке метаданных
+  const handleLoadedMetadata = () => {
+    if (audioRef.current) {
+      setDuration(audioRef.current.duration);
     }
   };
 
@@ -46,12 +88,23 @@ const ExerciseCard = ({ exercise }) => {
 
     audio.addEventListener('play', handlePlay);
     audio.addEventListener('pause', handlePause);
+    audio.addEventListener('timeupdate', handleTimeUpdate); // Слушаем изменение времени
+    audio.addEventListener('loadedmetadata', handleLoadedMetadata); // Слушаем метаданные
 
     return () => {
       audio.removeEventListener('play', handlePlay);
       audio.removeEventListener('pause', handlePause);
+      audio.removeEventListener('timeupdate', handleTimeUpdate);
+      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
     };
   }, []);
+
+  // Форматирование времени (секунды -> MM:SS)
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  };
 
   // Генерация пути к аудиофайлу
   const audioPath = `https://github.com/DDDDrew8/kiryushin/releases/download/Kyryushin/${exercise.displayNumber.padStart(3, '0')}.mp3`;
@@ -92,27 +145,59 @@ const ExerciseCard = ({ exercise }) => {
 
       {/* Плеер */}
       <div className="mt-auto pt-4 border-t border-gray-600 dark:border-gray-600">
-        <audio ref={audioRef} src={audioPath} preload="none" />
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={togglePlayPause}
-            className="p-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
-            aria-label={isPlaying ? "Пауза" : "Воспроизвести"}
-          >
-            {isPlaying ? <FaPause /> : <FaPlay />}
-          </button>
-          <div className="flex items-center space-x-1 w-full">
-            <FaVolumeUp className="text-gray-400 dark:text-gray-500" />
+        <audio ref={audioRef} src={audioPath} preload="metadata" /> {/* preload="metadata" для загрузки времени */}
+        <div className="flex flex-col space-y-2">
+          {/* Прогресс-бар */}
+          <div className="flex items-center space-x-2">
+            <span className="text-xs text-gray-400 dark:text-gray-500 w-10">
+              {formatTime(currentTime)}
+            </span>
             <input
               type="range"
+              ref={progressRef} // Привязываем ref
               min="0"
-              max="1"
-              step="0.01"
-              value={volume}
-              onChange={handleVolumeChange}
+              max="100"
+              value={duration ? (currentTime / duration) * 100 : 0} // Значение в процентах
+              onChange={handleProgressChange}
               className="w-full h-1 bg-gray-600 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer accent-blue-500"
-              aria-label="Громкость"
+              aria-label="Прогресс воспроизведения"
             />
+            <span className="text-xs text-gray-400 dark:text-gray-500 w-10 text-right">
+              {formatTime(duration)}
+            </span>
+          </div>
+
+          {/* Кнопки управления */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={togglePlayPause}
+                className="p-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                aria-label={isPlaying ? "Пауза" : "Воспроизвести"}
+              >
+                {isPlaying ? <FaPause /> : <FaPlay />}
+              </button>
+              <button
+                onClick={handleStop}
+                className="p-2 rounded-full bg-red-600 hover:bg-red-700 text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                aria-label="Стоп"
+              >
+                <FaStop />
+              </button>
+            </div>
+            <div className="flex items-center space-x-1 w-full max-w-[60%]">
+              <FaVolumeUp className="text-gray-400 dark:text-gray-500" />
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={volume}
+                onChange={handleVolumeChange}
+                className="w-full h-1 bg-gray-600 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer accent-blue-500"
+                aria-label="Громкость"
+              />
+            </div>
           </div>
         </div>
       </div>
